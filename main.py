@@ -18,8 +18,8 @@ from urllib.parse import urlparse, parse_qs
 CURRENT_VERSION = "1.0.0"
 
 # Github Raw URL을 지정하세요. (main.py 코드가 수정되면 자동으로 로컬 코드를 덮어쓰고 재실행됩니다)
-VERSION_CHECK_URL = "https://raw.githubusercontent.com/사용자/리포지토리/main/version.json"
-UPDATE_CODE_URL = "https://raw.githubusercontent.com/사용자/리포지토리/main/main.py"
+VERSION_CHECK_URL = "https://raw.githubusercontent.com/gyblack1009/MP-Supporter/refs/heads/main/version.json"
+UPDATE_CODE_URL = "https://raw.githubusercontent.com/gyblack1009/MP-Supporter/refs/heads/main/main.py"
 
 SHEET_ID = "1sAuycErpNCvAFq7-9-I6J8D2ONmMmqe2NDh17lxp8TU"
 URL_TOTAL_SHEET = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv"
