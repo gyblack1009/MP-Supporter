@@ -17,7 +17,6 @@ from urllib.parse import urlparse, parse_qs
 # ==========================================
 CURRENT_VERSION = "1.0.0"
 
-# Github Raw URL을 지정하세요. (main.py 코드가 수정되면 자동으로 로컬 코드를 덮어쓰고 재실행됩니다)
 VERSION_CHECK_URL = "https://raw.githubusercontent.com/gyblack1009/MP-Supporter/refs/heads/main/version.json"
 UPDATE_CODE_URL = "https://raw.githubusercontent.com/gyblack1009/MP-Supporter/refs/heads/main/main.py"
 
@@ -42,7 +41,8 @@ REPORT_FORMATS = {
     "구금 보고서": "대상자 닉네임 및 계급 : {target} / {rank}\n소속 : {Div}\n형량 : {total}\n사유 : {items}\n누적 횟수 : N"
 }
 
-AUTO_COPY_SENTENCES = ["특전사 출입", "지작사 출입", "2사단 출입"]
+# 클릭 시 즉시 클립보드로 자동 복사되는 항목들
+AUTO_COPY_SENTENCES = ["특전사 출입", "지작사 출입", "2사단 출입", "즉시체포"]
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -66,7 +66,7 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         super().__init__()
 
         self.title("군사경찰 V2")
-        self.geometry("280x420")
+        self.geometry("250x350")
         self.resizable(False, False)
         self.attributes("-topmost", True)
 
@@ -77,26 +77,21 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         self.is_gajung = False    
         self.is_transparent = False
 
-        # 실행 시 자동 코드 업데이트 체크
         self.check_auto_update()
         self.show_login_frame()
 
     def check_auto_update(self):
-        """서버 상의 소스 코드가 수정되었는지 확인 후 자동으로 소스 코드를 업데이트하고 재실행합니다."""
         try:
-            # 1. 버전 확인
             res = requests.get(VERSION_CHECK_URL, timeout=3)
             if res.status_code == 200:
                 data = res.json()
                 latest_version = data.get("version")
                 if latest_version and latest_version != CURRENT_VERSION:
-                    # 2. 최신 코드 다운로드 후 자기 자신 파일에 덮어쓰기
                     code_res = requests.get(UPDATE_CODE_URL, timeout=5)
                     if code_res.status_code == 200:
                         current_file = os.path.realpath(sys.argv[0])
                         with open(current_file, "w", encoding="utf-8") as f:
                             f.write(code_res.text)
-                        # 3. 프로그램 재실행
                         os.execv(sys.executable, [sys.executable] + sys.argv)
         except Exception as e:
             print("자동 업데이트 검사 스킵:", e)
@@ -111,7 +106,7 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         self.auth_btn = ctk.CTkButton(self.login_frame, text="🔗 Roblox 로그인", fg_color="#00A2FF", width=200, height=32, font=ctk.CTkFont(size=12, weight="bold"), command=self.start_roblox_oauth)
         self.auth_btn.pack(pady=15)
 
-        self.login_status_lbl = ctk.CTkLabel(self.login_frame, text="", font=ctk.CTkFont(size=10))
+        self.login_status_lbl = ctk.CTkLabel(self.login_frame, text="", font=ctk.CTkFont(size=10, weight="bold"))
         self.login_status_lbl.pack(pady=5)
 
     def start_roblox_oauth(self):
@@ -205,7 +200,7 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         self.manager_entry.configure(state="disabled", fg_color="#2A2A2A", text_color="#A0A0A0")
         self.manager_entry.pack(fill="x", pady=2)
 
-        self.search_entry = ctk.CTkEntry(self.main_scroll, placeholder_text="🔍 법률 항목 검색...", height=26, font=ctk.CTkFont(size=10))
+        self.search_entry = ctk.CTkEntry(self.main_scroll, placeholder_text="🔍 법률 항목 검색...", height=26, font=ctk.CTkFont(size=10, weight="bold"))
         self.search_entry.pack(fill="x", pady=2)
         self.search_entry.bind("<KeyRelease>", self.filter_law_items)
 
@@ -270,16 +265,14 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         reset_btn.pack(side="right")
 
     def init_manual_tab(self):
-        """매뉴얼 탭의 레이아웃 및 여백 개선"""
         tab = self.tabview.tab("매뉴얼")
         
         self.manual_scroll_frame = ctk.CTkScrollableFrame(tab, width=75, label_text="목차", label_font=ctk.CTkFont(size=9, weight="bold"))
         self.manual_scroll_frame.pack(side="left", fill="y", padx=2, pady=2)
         
-        # 텍스트 상자 가독성을 위해 폰트 및 여백 조정
         self.manual_text = ctk.CTkTextbox(
             tab, 
-            font=ctk.CTkFont(family="Consolas", size=10), 
+            font=ctk.CTkFont(family="Consolas", size=10, weight="bold"), 
             wrap="word", 
             activate_scrollbars=True
         )
@@ -306,6 +299,7 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         webbrowser.open(url)
 
     def on_sentence_select(self, choice):
+        # 선택 시 클립보드로 자동 복사
         if choice in AUTO_COPY_SENTENCES:
             sentence = REPORT_FORMATS[choice]
             pyperclip.copy(sentence)
@@ -395,7 +389,9 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         self.copy_btn.configure(text="✅ 복사 완료!")
         self.after(1500, lambda: self.copy_btn.configure(text="📋 문장 복사"))
 
-        self.send_to_sheet_history(manager, target, items_str, f"{just_seconds}초")
+        # '긴급체포' 항목일 때만 구글 시트로 기록을 전송
+        if action_type == "긴급체포":
+            self.send_to_sheet_history(manager, target, items_str, f"{just_seconds}초")
 
     def load_sheet_data(self):
         try:
