@@ -58,7 +58,7 @@ class MilitaryPoliceSupportApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("군사경찰 V2")
+        self.title("군사경찰 V1")
         self.geometry("250x350")
         self.resizable(False, False)
         self.attributes("-topmost", True)
@@ -191,9 +191,9 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         btn_f = ctk.CTkFont(size=9, weight="bold")
         
         ctk.CTkButton(doc_frame, text="종합매뉴얼", height=22, font=btn_f, command=lambda: self.open_doc("https://docs.google.com/document/d/1ieEW6zZLSeLvQnwc59ePCH5_GJ1N76eH3oJFYJd_8UI/edit?usp=sharing")).grid(row=0, column=0, padx=2, pady=2, sticky="ew")
-        ctk.CTkButton(doc_frame, text="직무법률", height=22, font=btn_f, command=lambda: self.open_doc("https://docs.google.com/document/d/1o-Aj2TlcSHsHXLDJZ_7Q8Ni7uxF9RRTAjPFE2d2A8Xc/edit?usp=sharing")).grid(row=0, column=1, padx=2, pady=2, sticky="ew")
-        ctk.CTkButton(doc_frame, text="영창안내", height=22, font=btn_f, command=lambda: self.open_doc("https://docs.google.com/document/d/1Y0r-A344KYD6OFGWyUxhG5-vn7kmeAsmjF_rjd3K8jY/edit?usp=sharing")).grid(row=1, column=0, padx=2, pady=2, sticky="ew")
-        ctk.CTkButton(doc_frame, text="병영규정", height=22, font=btn_f, command=lambda: self.open_doc("https://docs.google.com/document/d/1OW1SM-JlU8g-tJOFNz4HVcGAm6R8g1xWhFbLh9dbLIk/edit?usp=sharing")).grid(row=1, column=1, padx=2, pady=2, sticky="ew")
+        ctk.CTkButton(doc_frame, text="군사경찰직무법", height=22, font=btn_f, command=lambda: self.open_doc("https://docs.google.com/document/d/1o-Aj2TlcSHsHXLDJZ_7Q8Ni7uxF9RRTAjPFE2d2A8Xc/edit?usp=sharing")).grid(row=0, column=1, padx=2, pady=2, sticky="ew")
+        ctk.CTkButton(doc_frame, text="영창집행안내", height=22, font=btn_f, command=lambda: self.open_doc("https://docs.google.com/document/d/1Y0r-A344KYD6OFGWyUxhG5-vn7kmeAsmjF_rjd3K8jY/edit?usp=sharing")).grid(row=1, column=0, padx=2, pady=2, sticky="ew")
+        ctk.CTkButton(doc_frame, text="기본규칙", height=22, font=btn_f, command=lambda: self.open_doc("https://docs.google.com/document/d/1OW1SM-JlU8g-tJOFNz4HVcGAm6R8g1xWhFbLh9dbLIk/edit?usp=sharing")).grid(row=1, column=1, padx=2, pady=2, sticky="ew")
         doc_frame.grid_columnconfigure((0, 1), weight=1)
 
         tool_frame = ctk.CTkFrame(self.main_scroll, fg_color="transparent")
