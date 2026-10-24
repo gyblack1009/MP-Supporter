@@ -58,7 +58,7 @@ class MilitaryPoliceSupportApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("군사경찰 V1")
+        self.title("군사경찰 서포터 V1")
         self.geometry("250x350")
         self.resizable(False, False)
         self.attributes("-topmost", True)
