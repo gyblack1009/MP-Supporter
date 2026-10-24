@@ -1,4 +1,3 @@
-## pyinstaller --noconsole --onefile main.py
 import customtkinter as ctk
 import webbrowser
 import pandas as pd
@@ -15,11 +14,6 @@ from urllib.parse import urlparse, parse_qs
 # ==========================================
 # 📌 설정 및 환경 변수
 # ==========================================
-CURRENT_VERSION = "1.0.0"
-
-VERSION_CHECK_URL = "https://raw.githubusercontent.com/gyblack1009/MP-Supporter/refs/heads/main/version.json"
-UPDATE_CODE_URL = "https://raw.githubusercontent.com/gyblack1009/MP-Supporter/refs/heads/main/main.py"
-
 SHEET_ID = "1sAuycErpNCvAFq7-9-I6J8D2ONmMmqe2NDh17lxp8TU"
 URL_TOTAL_SHEET = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv"
 
@@ -33,15 +27,14 @@ auth_code_received = None
 
 REPORT_FORMATS = {
     "긴급체포": "{rank} {target}님을 {items}으로 긴급 체포 및 영창 {total}초 수감하며, 본 조치에 대해 이의가 있거나 구제 절차가 필요하신 경우, 국방민원센터를 통해 이의제기를 하실 수 있습니다.",
-    "특전사 출입": "군사경찰 직무수행법 제13조에 의거 특전사 부지 출입 합니다.\n",
-    "지작사 출입": "군사경찰 직무수행법 제13조에 의거 지작사 부지 출입 합니다.\n",
-    "2사단 출입": "군사경찰 직무수행법 제13조에 의거 2사단 부지 출입 합니다.",
+    "특전사 출입": "군사경찰의 직무수행에 관한 법률 제13조 1항에 의거 범법자 수색 목적으로 특전사 부지 출입 합니다.\n",
+    "지작사 출입": "군사경찰의 직무수행에 관한 법률 제13조 1항에 의거 범법자 수색 목적으로 지작사 부지 출입 합니다.\n",
+    "2사단 출입": "군사경찰의 직무수행에 관한 법률 제13조 1항에 의거 범법자 수색 목적으로 2사단 부지 출입 합니다.",
     "즉시체포": "병영규정 제18조 3항, 영내 질서 붕괴 우려로 고지 없이 즉시 체포 및 수감합니다.",
     "형집행 보고서": "담당자 : {manager}\n대상자 : {target}\n형량 : {total}\n사유 : {items}",
     "구금 보고서": "대상자 닉네임 및 계급 : {target} / {rank}\n소속 : {Div}\n형량 : {total}\n사유 : {items}\n누적 횟수 : N"
 }
 
-# 클릭 시 즉시 클립보드로 자동 복사되는 항목들
 AUTO_COPY_SENTENCES = ["특전사 출입", "지작사 출입", "2사단 출입", "즉시체포"]
 
 ctk.set_appearance_mode("Dark")
@@ -77,24 +70,7 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         self.is_gajung = False    
         self.is_transparent = False
 
-        self.check_auto_update()
         self.show_login_frame()
-
-    def check_auto_update(self):
-        try:
-            res = requests.get(VERSION_CHECK_URL, timeout=3)
-            if res.status_code == 200:
-                data = res.json()
-                latest_version = data.get("version")
-                if latest_version and latest_version != CURRENT_VERSION:
-                    code_res = requests.get(UPDATE_CODE_URL, timeout=5)
-                    if code_res.status_code == 200:
-                        current_file = os.path.realpath(sys.argv[0])
-                        with open(current_file, "w", encoding="utf-8") as f:
-                            f.write(code_res.text)
-                        os.execv(sys.executable, [sys.executable] + sys.argv)
-        except Exception as e:
-            print("자동 업데이트 검사 스킵:", e)
 
     def show_login_frame(self):
         self.login_frame = ctk.CTkFrame(self)
@@ -299,7 +275,6 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         webbrowser.open(url)
 
     def on_sentence_select(self, choice):
-        # 선택 시 클립보드로 자동 복사
         if choice in AUTO_COPY_SENTENCES:
             sentence = REPORT_FORMATS[choice]
             pyperclip.copy(sentence)
@@ -389,7 +364,6 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         self.copy_btn.configure(text="✅ 복사 완료!")
         self.after(1500, lambda: self.copy_btn.configure(text="📋 문장 복사"))
 
-        # '긴급체포' 항목일 때만 구글 시트로 기록을 전송
         if action_type == "긴급체포":
             self.send_to_sheet_history(manager, target, items_str, f"{just_seconds}초")
 
