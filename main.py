@@ -17,7 +17,7 @@ from urllib.parse import urlparse, parse_qs
 SHEET_ID = "1sAuycErpNCvAFq7-9-I6J8D2ONmMmqe2NDh17lxp8TU"
 URL_TOTAL_SHEET = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv"
 
-GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbylPvvwlkhCFXBco3qEzxaXhHnu85Dtb6-4kWkAIEn5hI2e2sFbtvHmKLRH7RPOddETVQ/exec"
+GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwTyvG6Hhreuyz7RmYggFkMkTYPCDjZqXkm7E1i88jlSbj1DLJw-53RirVtFQ3KEXuzHg/exec"
 
 ROBLOX_CLIENT_ID = "1681897459105367104"
 ROBLOX_CLIENT_SECRET = "RBX-eP19qDEvWE2ZcLYtSyRQgN1xccO1D-KVtU4zjeaWmSDbXZvO-eBjRsbAIy3Fcvbk"
