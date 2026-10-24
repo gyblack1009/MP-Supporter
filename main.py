@@ -215,7 +215,7 @@ class MilitaryPoliceSupportApp(ctk.CTk):
         self.rank_combobox.grid(row=1, column=0, padx=1, pady=2, sticky="ew")
 
         self.div_combobox = ctk.CTkComboBox(
-            tool_frame, values=["특수전사령부", "7여단", "13여단", "특항단", "군사경찰", "7군단", "8사단", "2사단", "3사단", "육군훈련소"], 
+            tool_frame, values=["특수전사령부", "1공수특전여단", "13특수임무여단", "100정보여단", "군사경찰실", "지상작전사령부", "8기동사단", "2신속대응사단", "3보병사단", "육군훈련소"], 
             height=22, font=ctk.CTkFont(size=9, weight="bold"), dropdown_font=ctk.CTkFont(size=9, weight="bold")
         )
         self.div_combobox.set("소속 선택")
